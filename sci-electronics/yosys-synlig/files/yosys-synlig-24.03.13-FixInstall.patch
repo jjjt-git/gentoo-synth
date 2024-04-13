@@ -1,0 +1,19 @@
+diff --git a/install_plugin.sh b/install_plugin.sh
+index 7a40476..94369fb 100755
+--- a/install_plugin.sh
++++ b/install_plugin.sh
+@@ -13,12 +13,5 @@ YOSYS_PLUGIN_DIR=$YOSYS_DATDIR/plugins
+ INSTALL_SCRIPT_DIR=$(dirname $(realpath $0))
+ SYSTEMVERILOG_PLUGIN_PATH=$INSTALL_SCRIPT_DIR/out/current/share/yosys/plugins/systemverilog.so
+ 
+-mkdir -p $YOSYS_PLUGIN_DIR
+-cp -v $SYSTEMVERILOG_PLUGIN_PATH $YOSYS_PLUGIN_DIR
+-
+-if [[ -f /etc/os-release ]] && source /etc/os-release && [[ "$NAME" == *Debian* ]]; then
+-    # Debian has a different hardcoded plugin path, not reflected in yosys-config
+-    # https://salsa.debian.org/science-team/yosys/-/blob/master/debian/patches/0017-Support-plugin-loading-from-libdir.patch
+-    mkdir -p /usr/lib/yosys/plugins
+-    cp $SYSTEMVERILOG_PLUGIN_PATH /usr/lib/yosys/plugins
+-fi
++mkdir -p $1/$YOSYS_PLUGIN_DIR
++cp -v $SYSTEMVERILOG_PLUGIN_PATH $1/$YOSYS_PLUGIN_DIR

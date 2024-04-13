@@ -1,0 +1,171 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e549f11..3cf7a5e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -83,12 +83,6 @@ if("${CMAKE_VERSION}" VERSION_GREATER 3.1.0)
+   endif()
+   set(CMAKE_CXX_STANDARD_REQUIRED ON)
+   set(CMAKE_CXX_EXTENSIONS OFF)
+-else()
+-  set(CMAKE_CXX_FLAGS                "${CMAKE_CXX_FLAGS} -std=c++11")
+-  set(CMAKE_CXX_FLAGS_DEBUG          "${CMAKE_CXX_FLAGS_DEBUG} -std=c++11")
+-  set(CMAKE_CXX_FLAGS_MINSIZEREL     "${CMAKE_CXX_FLAGS_MINSIZEREL} -std=c++11")
+-  set(CMAKE_CXX_FLAGS_RELEASE        "${CMAKE_CXX_FLAGS_RELEASE} -std=c++11")
+-  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -std=c++11")
+ endif()
+ 
+ set(CMAKE_CXX_FLAGS                  "${CMAKE_CXX_FLAGS} ${MY_CXX_WARNING_FLAGS}")
+@@ -204,16 +198,8 @@ if (ANTLR4_INSTALL)
+ 
+ endif(ANTLR4_INSTALL)
+ 
+-if(EXISTS LICENSE.txt)
+-install(FILES LICENSE.txt
+-        DESTINATION "share/doc/libantlr4")
+-elseif(EXISTS ../../LICENSE.txt) 
+-install(FILES ../../LICENSE.txt
+-    DESTINATION "share/doc/libantlr4")
+-endif()
+-
+ install(FILES README.md VERSION 
+-    DESTINATION "share/doc/libantlr4")
++	DESTINATION ${CMAKE_INSTALL_DOCDIR})
+ 
+ set(CPACK_PACKAGE_CONTACT "antlr-discussion@googlegroups.com")
+ set(CPACK_PACKAGE_VERSION ${ANTLR_VERSION})
+diff --git a/runtime/CMakeLists.txt b/runtime/CMakeLists.txt
+index c8b16c6..c68e72d 100644
+--- a/runtime/CMakeLists.txt
++++ b/runtime/CMakeLists.txt
+@@ -22,7 +22,6 @@ file(GLOB libantlrcpp_SRC
+ )
+ 
+ add_library(antlr4_shared SHARED ${libantlrcpp_SRC})
+-add_library(antlr4_static STATIC ${libantlrcpp_SRC})
+ 
+ set(LIB_OUTPUT_DIR "${CMAKE_HOME_DIRECTORY}/dist") # put generated libraries here.
+ message(STATUS "Output libraries to ${LIB_OUTPUT_DIR}")
+@@ -33,54 +32,17 @@ add_custom_target(make_lib_output_dir ALL
+     )
+ 
+ add_dependencies(antlr4_shared make_lib_output_dir)
+-add_dependencies(antlr4_static make_lib_output_dir)
+ 
+ find_package(utf8cpp QUIET)
+ 
+ set(INSTALL_utf8cpp FALSE)
+ 
+-if (utf8cpp_FOUND)
+-  target_link_libraries(antlr4_shared utf8cpp)
+-  target_link_libraries(antlr4_static utf8cpp)
+-else()
+-
+-  # older utf8cpp doesn't define the package above
+-  find_path(utf8cpp_HEADER utf8.h
+-    PATH_SUFFIXES utf8cpp
+-    )
+-
+-  if (utf8cpp_HEADER)
+-    include_directories(${utf8cpp_HEADER})
+-  else()
+-    include(${CMAKE_ROOT}/Modules/ExternalProject.cmake)
+-    set(THIRDPARTY_DIR ${CMAKE_BINARY_DIR}/runtime/thirdparty)
+-    set(UTFCPP_DIR ${THIRDPARTY_DIR}/utfcpp)
+-    ExternalProject_Add(
+-      utf8cpp
+-      GIT_REPOSITORY        "https://github.com/nemtrif/utfcpp"
+-      GIT_TAG               "v3.1.1"
+-      SOURCE_DIR            ${UTFCPP_DIR}
+-      UPDATE_DISCONNECTED   1
+-      CMAKE_ARGS            -DCMAKE_INSTALL_PREFIX=${UTFCPP_DIR}/install -DUTF8_TESTS=off -DUTF8_SAMPLES=off
+-      STEP_TARGETS          build)
+-
+-    include_directories(
+-      ${UTFCPP_DIR}/install/include/utf8cpp
+-      ${UTFCPP_DIR}/install/include/utf8cpp/utf8
+-      )
+-
+-    add_dependencies(antlr4_shared utf8cpp)
+-    add_dependencies(antlr4_static utf8cpp)
+-    set(INSTALL_utf8cpp TRUE)
+-  endif()
+-endif()
++target_link_libraries(antlr4_shared utf8cpp)
+ 
+ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+   target_link_libraries(antlr4_shared ${UUID_LIBRARIES})
+-  target_link_libraries(antlr4_static ${UUID_LIBRARIES})
+ elseif(APPLE)
+   target_link_libraries(antlr4_shared ${COREFOUNDATION_LIBRARY})
+-  target_link_libraries(antlr4_static ${COREFOUNDATION_LIBRARY})
+ endif()
+ 
+ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+@@ -97,29 +59,16 @@ elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU" OR "${CMAKE_CXX_COMPILER_ID}" MA
+ endif()
+ 
+ set(extra_share_compile_flags "")
+-set(extra_static_compile_flags "")
+-if(WIN32)
+-  set(extra_share_compile_flags "-DANTLR4CPP_EXPORTS")
+-  set(extra_static_compile_flags "-DANTLR4CPP_STATIC")
+-endif(WIN32)
+ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+   if(WITH_STATIC_CRT)
+     target_compile_options(antlr4_shared PRIVATE "/MT$<$<CONFIG:Debug>:d>")
+-    target_compile_options(antlr4_static PRIVATE "/MT$<$<CONFIG:Debug>:d>")
+   else()
+     target_compile_options(antlr4_shared PRIVATE "/MD$<$<CONFIG:Debug>:d>")
+-    target_compile_options(antlr4_static PRIVATE "/MD$<$<CONFIG:Debug>:d>")
+   endif()
+ endif()
+ 
+-set(static_lib_suffix "")
+-if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+-  set(static_lib_suffix "-static")
+-endif()
+-
+ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+   set(extra_share_compile_flags "-DANTLR4CPP_EXPORTS -MP /wd4251")
+-  set(extra_static_compile_flags "-DANTLR4CPP_STATIC -MP")
+ endif()
+ 
+ set_target_properties(antlr4_shared
+@@ -133,35 +82,12 @@ set_target_properties(antlr4_shared
+                                  ARCHIVE_OUTPUT_DIRECTORY ${LIB_OUTPUT_DIR}
+                                  COMPILE_FLAGS "${disabled_compile_warnings} ${extra_share_compile_flags}")
+ 
+-set_target_properties(antlr4_static
+-                      PROPERTIES VERSION   ${ANTLR_VERSION}
+-                                 SOVERSION ${ANTLR_VERSION}
+-                                 OUTPUT_NAME "antlr4-runtime${static_lib_suffix}"
+-                                 ARCHIVE_OUTPUT_DIRECTORY ${LIB_OUTPUT_DIR}
+-                                 COMPILE_FLAGS "${disabled_compile_warnings} ${extra_static_compile_flags}")
+-
+ install(TARGETS antlr4_shared
+-        DESTINATION lib
+-        EXPORT antlr4-targets)
+-install(TARGETS antlr4_static
+-        DESTINATION lib
++	DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         EXPORT antlr4-targets)
+ 
+ install(DIRECTORY "${PROJECT_SOURCE_DIR}/runtime/src/"
+-        DESTINATION "include/antlr4-runtime"
++	DESTINATION "include/antlr4-runtime"
+         COMPONENT dev
+         FILES_MATCHING PATTERN "*.h"
+         )
+-
+-if (INSTALL_utf8cpp)
+-  install(FILES "${UTFCPP_DIR}/source/utf8.h"
+-	  DESTINATION "include/antlr4-runtime")
+-  install(DIRECTORY "${UTFCPP_DIR}/source/utf8"
+-	  DESTINATION "include/antlr4-runtime"
+-	  COMPONENT dev
+-	  FILES_MATCHING PATTERN "*.h"
+-	  )
+-endif()
+-
+-
+-
