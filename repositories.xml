@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<repositories version="1.0">
+  <repo quality="experimental" status="unofficial">
+    <name>gentoo-synth</name>
+    <description lang="en">Contains ebuilds for various HDL synthesis/verification related tasks</description>
+      <homepage>https://github.com/jjjt-git/gentoo-synth</homepage>
+        <owner type="person">
+            <name>Jacob Tilger</name>
+            <email>jacob.tilger@mailbox.tu-dresden.de</email>
+        </owner>
+        <source type="git">git://github.com/jjjt-git/gentoo-synth.git</source>
+        <feed>https://github.com/jjjt-git/gentoo-synth/commits/master.atom</feed>
+  </repo>
+</repositories>
