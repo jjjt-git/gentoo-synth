@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 992c703..0ff632c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -418,7 +418,7 @@ install(
+ # install the configuration file
+ install(
+   FILES ${CMAKE_CURRENT_BINARY_DIR}/UHDM.pc
+-  DESTINATION lib/pkgconfig)
++  DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ 
+ if(UHDM_WITH_PYTHON)
+   add_subdirectory(python)

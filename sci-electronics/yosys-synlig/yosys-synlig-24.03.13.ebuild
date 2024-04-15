@@ -5,7 +5,7 @@ EAPI=8
 
 inherit cmake
 
-MYCMAKEARGS="-DSYNLIG_USE_HOST_ALL=ON"
+MYCMAKEARGS=
 
 GIT_RELEASE_ID="2024-03-13-d844d8d"
 
@@ -17,7 +17,7 @@ LICENSE=""
 SLOT="0"
 KEYWORDS="~amd64"
 
-DEPEND="sci-electronics/Surelog
+DEPEND="=sci-electronics/surelog-24.01.14
 	<=sci-electronics/yosys-0.38
 	dev-libs/capnproto
 	dev-cpp/gtest"
@@ -35,6 +35,7 @@ src_unpack() {
 
 src_configure() {
 	local mycmakeargs=(
+		"-DSYNLIG_USE_HOST_ALL=ON"
 		"-DSYNLIG_USE_HOST_YOSYS=OFF"
 		"-DYOSYS_INCLUDE_DIR=/usr/share/yosys/include"
 		"-DYOSYS_CONFIG=yosys-config"

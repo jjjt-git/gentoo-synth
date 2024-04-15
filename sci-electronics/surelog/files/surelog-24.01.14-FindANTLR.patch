@@ -1,5 +1,5 @@
-diff --git a/cmake/modules/FindANTLR.cmake b/cmake/modules/FindANTLR.cmake
-index 9d3f6ae0eb..8ed87bd80d 100644
+diff --git a/cmake/module/FindANTLR.cmake b/cmake/modules/FindANTLR.cmake
+
 --- a/cmake/modules/FindANTLR.cmake
 +++ b/cmake/modules/FindANTLR.cmake
 @@ -12,17 +12,16 @@ find_package(Java QUIET COMPONENTS Runtime)
