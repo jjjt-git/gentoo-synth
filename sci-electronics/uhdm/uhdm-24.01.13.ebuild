@@ -3,16 +3,18 @@
 
 EAPI=8
 
+GIT_COMMIT_ID="b918b5d5c82cfbaf71e04f87ab69fc7e182e41aa"
+
 PYTHON_COMPAT=( python3_{10,11} )
 CMAKE_REMOVE_MODULES_LIST=(third_party)
-MYCMAKEARGS="-DUHDM_USE_HOST_GTEST=ON -DUHDM_USE_HOST_CAPNP=ON"
+MYCMAKEARGS="-DUHDM_USE_HOST_CAPNP=ON -DUHDM_USE_HOST_GTEST=ON"
 
 inherit python-r1
 inherit cmake
 
 DESCRIPTION="Universal Hardware Data Model"
 HOMEPAGE="https://github.com/chipsalliance/UHDM.git"
-SRC_URI="https://github.com/chipsalliance/UHDM/archive/refs/tags/v$PV.tar.gz -> $P.tar.gz"
+SRC_URI="https://github.com/chipsalliance/UHDM/archive/${GIT_COMMIT_ID}.tar.gz -> $P.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
@@ -29,3 +31,5 @@ REQUIRED_USE="( ${PYTHON_REQUIRED_USE} )"
 PATCHES=(
 	"${FILESDIR}"/${P}-CMakeLists.patch
 )
+
+S="${WORKDIR}/UHDM-${GIT_COMMIT_ID}"

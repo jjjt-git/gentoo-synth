@@ -1,0 +1,221 @@
+diff --git a/scripts/ElaboratorListener_cpp.py b/scripts/ElaboratorListener_cpp.py
+index ee766da..4794436 100644
+--- a/scripts/ElaboratorListener_cpp.py
++++ b/scripts/ElaboratorListener_cpp.py
+@@ -7,7 +7,7 @@ def _generate_module_listeners(models, classname):
+   while classname:
+     model = models[classname]
+ 
+-    for key, value in model.allitems():
++    for key, value in model.iteritems(multi = True):
+       if key in ['class', 'obj_ref', 'class_ref', 'group_ref']:
+         name = value.get('name')
+         type = value.get('type')
+@@ -124,7 +124,7 @@ def _generate_class_listeners(models):
+     while classname:
+       model = models[classname]
+ 
+-      for key, value in model.allitems():
++      for key, value in model.iteritems(multi = True):
+         if key in ['class', 'obj_ref', 'class_ref', 'group_ref']:
+           name = value.get('name')
+           type = value.get('type')
+diff --git a/scripts/UhdmListener.py b/scripts/UhdmListener.py
+index 43fb16d..4ec70f4 100644
+--- a/scripts/UhdmListener.py
++++ b/scripts/UhdmListener.py
+@@ -49,7 +49,7 @@ def generate(models):
+             else:
+                 private_implementations.append('  listenBaseClass_(object);')
+ 
+-            for key, value in model.allitems():
++            for key, value in model.iteritems(multi = True):
+                 if key in ['class', 'obj_ref', 'class_ref', 'group_ref']:
+                     name = value.get('name')
+                     vpi  = value.get('vpi')
+diff --git a/scripts/VpiListener.py b/scripts/VpiListener.py
+index b7aa9ac..2fdc303 100644
+--- a/scripts/VpiListener.py
++++ b/scripts/VpiListener.py
+@@ -66,7 +66,7 @@ def generate(models):
+         Baseclass_ = baseclass[:1].upper() + baseclass[1:]
+         private_implementations.append(f'  listen{Baseclass_}_(handle);')
+ 
+-      for key, value in model.allitems():
++      for key, value in model.iteritems(multi = True):
+         if key in ['class', 'obj_ref', 'class_ref', 'group_ref']:
+           vpi  = value.get('vpi')
+           type = value.get('type')
+diff --git a/scripts/capnp.py b/scripts/capnp.py
+index 33388d8..a98d45f 100644
+--- a/scripts/capnp.py
++++ b/scripts/capnp.py
+@@ -63,7 +63,7 @@ def generate(models):
+         model_schemas.append(f'struct {Classname} {{')
+         model_schemas.append(f'  base @0: {Basename};')
+ 
+-        for key, value in model.allitems():
++        for key, value in model.iteritems(multi = True):
+             if key == 'property':
+                 if value.get('name') != 'type':
+                     vpi = value.get('vpi')
+diff --git a/scripts/classes.py b/scripts/classes.py
+index 4095732..8af89e8 100644
+--- a/scripts/classes.py
++++ b/scripts/classes.py
+@@ -160,7 +160,7 @@ def _get_DeepClone_implementation(model, models):
+         content.append('      clone->VpiFullName(nn->VpiFullName());')
+         content.append('  }')
+ 
+-    for key, value in model.allitems():
++    for key, value in model.iteritems(multi = True):
+         if key in ['class', 'obj_ref', 'class_ref', 'group_ref']:
+             name = value.get('name')
+             type = value.get('type')
+@@ -335,7 +335,7 @@ def _get_GetByVpiName_implementation(model):
+     content = []
+     content.append(f'const BaseClass* {classname}::GetByVpiName(std::string_view name) const {{')
+ 
+-    for key, value in model.allitems():
++    for key, value in model.iteritems(multi = True):
+         if key in ['class', 'obj_ref', 'class_ref', 'group_ref']:
+             name = value.get('name')
+             card = value.get('card')
+@@ -369,7 +369,7 @@ def _get_GetByVpiType_implementation(model, models):
+     modeltype = model['type']
+ 
+     case_bodies = {}
+-    for key, value in model.allitems():
++    for key, value in model.iteritems(multi = True):
+         if key in ['class', 'obj_ref', 'class_ref', 'group_ref']:
+             card = value.get('card')
+             name = value.get('name')
+@@ -419,7 +419,7 @@ def _get_GetVpiPropertyValue_implementation(model, models):
+ 
+     type_specified = False
+     case_bodies = {}
+-    for key, value in model.allitems():
++    for key, value in model.iteritems(multi = True):
+         if key == 'property':
+             name = value.get('name')
+             vpi = value.get('vpi')
+@@ -513,7 +513,7 @@ def _get_Compare_implementation(model):
+     ])
+ 
+     var_declared = False
+-    for key, value in model.allitems():
++    for key, value in model.iteritems(multi = True):
+         if key not in ['property', 'obj_ref', 'class_ref', 'class', 'group_ref']:
+             continue
+ 
+@@ -594,7 +594,7 @@ def _get_group_members_recursively(model, models):
+ 
+     checktype = set()
+     _cached_members[groupname] = set()
+-    for key, value in model.allitems():
++    for key, value in model.iteritems(multi = True):
+         if key in ['obj_ref', 'class_ref', 'group_ref'] and value:
+             name = value.get('name')
+             if name not in models:
+@@ -654,7 +654,7 @@ def _generate_one_class(model, models, templates):
+     baseclass_type = baseclass_model.get('type')
+ 
+     type_specified = False
+-    for key, value in model.allitems():
++    for key, value in model.iteritems(multi = True):
+         if key == 'property':
+             name = value.get('name')
+             vpi = value.get('vpi')
+diff --git a/scripts/containers_h.py b/scripts/containers_h.py
+index 7a7bfac..f21c725 100644
+--- a/scripts/containers_h.py
++++ b/scripts/containers_h.py
+@@ -6,7 +6,7 @@ from collections import OrderedDict
+ def generate(models):
+     types = set()
+     for model in models.values():
+-        for key, value in model.allitems():
++        for key, value in model.iteritems(multi = True):
+             if key == 'property':
+                 name = value.get('name')
+                 type = value.get('type')
+diff --git a/scripts/loader.py b/scripts/loader.py
+index 330a51a..a0bffec 100644
+--- a/scripts/loader.py
++++ b/scripts/loader.py
+@@ -1,4 +1,4 @@
+-import orderedmultidict
++from boltons.dictutils import OrderedMultiDict
+ import os
+ import pprint
+ import re
+@@ -32,7 +32,7 @@ def _load_one_model(filepath):
+             key = m.group('key').strip()
+             value = m.group('value').strip()
+             if key in [ 'obj_def', 'class_def', 'group_def' ]:
+-                top_def = orderedmultidict.omdict([
++                top_def = OrderedMultiDict([
+                     ('type', key),
+                     ('name', value),
+                     ('extends', None),
+@@ -47,7 +47,7 @@ def _load_one_model(filepath):
+                 top_def[key] = value
+ 
+             elif key in ['property', 'class_ref', 'obj_ref', 'group_ref', 'class']:
+-                cur_def = orderedmultidict.omdict([
++                cur_def = OrderedMultiDict([
+                     ('type', key),
+                     ('name', value),
+                 ])
+diff --git a/scripts/serializer.py b/scripts/serializer.py
+index f6097c1..8b1b313 100644
+--- a/scripts/serializer.py
++++ b/scripts/serializer.py
+@@ -65,7 +65,7 @@ def generate(models):
+         restore_adapters.append(f'  void operator()({Classname}::Reader reader, Serializer *const serializer, {classname} *const obj) const {{')
+         restore_adapters.append(f'    operator()(reader.getBase(), serializer, static_cast<{basename}*>(obj));')
+ 
+-        for key, value in model.allitems():
++        for key, value in model.iteritems(multi = True):
+             if key == 'property':
+                 name = value.get('name')
+                 vpi = value.get('vpi')
+diff --git a/scripts/uhdm_types_h.py b/scripts/uhdm_types_h.py
+index 04c6e32..cde0384 100644
+--- a/scripts/uhdm_types_h.py
++++ b/scripts/uhdm_types_h.py
+@@ -20,7 +20,7 @@ def get_type_map(models):
+         classname = model['name']
+         typenames.add(f'uhdm{classname}')
+ 
+-        for key, value in model.allitems():
++        for key, value in model.iteritems(multi = True):
+             if key in ['class', 'obj_ref', 'class_ref', 'group_ref']:
+                 name = value.get('name')
+                 card = value.get('card')
+diff --git a/scripts/vpi_user_cpp.py b/scripts/vpi_user_cpp.py
+index e759ffa..c93840a 100644
+--- a/scripts/vpi_user_cpp.py
++++ b/scripts/vpi_user_cpp.py
+@@ -14,7 +14,7 @@ def generate(models):
+ 
+         baseclass = classname
+         while baseclass:
+-            for key, value in models[baseclass].allitems():
++            for key, value in models[baseclass].iteritems(multi = True):
+                 if key == 'property' and value.get('card') == '1':
+                     type = value.get('type')
+ 
+diff --git a/scripts/vpi_visitor.py b/scripts/vpi_visitor.py
+index f740e31..479e9f5 100644
+--- a/scripts/vpi_visitor.py
++++ b/scripts/vpi_visitor.py
+@@ -97,7 +97,7 @@ def generate(models):
+         private_implementations.append(f'  visit_{baseclass}(obj_h, indent, relation, shallowVisit);')
+         
+         type_specified = False
+-        for key, value in model.allitems():
++        for key, value in model.iteritems(multi = True):
+             if key == 'property':
+                 name = value.get('name')
+                 vpi = value.get('vpi')

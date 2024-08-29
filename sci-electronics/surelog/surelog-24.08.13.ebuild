@@ -1,10 +1,7 @@
 EAPI=8
 
-GIT_COMMIT_ID="37ce1bbf98ca26ba2e18603a271b55ac05e121d5"
+GIT_COMMIT_ID="5f6e20e173fdc7decb0b47123436e2798b6e3f09"
 
-PYTHON_COMPAT=( python3_{10,11} )
-
-inherit python-r1
 inherit cmake
 
 DESCRIPTION="SV2017 parser"
@@ -20,8 +17,7 @@ PATCHES=(
 )
 
 DEPEND="=dev-cpp/antlr-cpp-4.9.3:*
-	dev-python/orderedmultidict[${PYTHON_USEDEP}]
-	=sci-electronics/uhdm-24.01.13
+	=sci-electronics/uhdm-24.08.07
 	dev-libs/capnproto
 	dev-cpp/gtest
 	dev-cpp/nlohmann_json"

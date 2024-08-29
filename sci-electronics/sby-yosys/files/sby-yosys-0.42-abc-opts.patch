@@ -1,0 +1,13 @@
+diff --git a/sbysrc/sby_engine_abc.py b/sbysrc/sby_engine_abc.py
+index 3527035..62244b0 100644
+--- a/sbysrc/sby_engine_abc.py
++++ b/sbysrc/sby_engine_abc.py
+@@ -111,7 +111,7 @@ def run(mode, task, engine_idx, engine):
+             else:
+                 task.error(f"Option {o} not supported by 'abc {abc_command[0]}'")
+ 
+-        abc_command[0] += " -v -l"
++        abc_command[0] += " -v"
+ 
+         if keep_going:
+             abc_command += ["-a", "-X", f"engine_{engine_idx}/trace_"]

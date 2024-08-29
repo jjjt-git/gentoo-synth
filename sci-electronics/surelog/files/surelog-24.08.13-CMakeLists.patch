@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -319,7 +319,7 @@ add_custom_command(
+   # Unfortunately, cmake does not provide simple equivalents to
+   # gmake's $(nodir $(surelog_grammars)).
+   # So, we list them here all manually passing to the command.
+-  COMMAND ${Java_JAVA_EXECUTABLE} -jar ${ANTLR_JAR_LOCATION} -Werror -Dlanguage=Cpp -package SURELOG
++  COMMAND ${ANTLR_JAR_LOCATION} -Werror -Dlanguage=Cpp -package SURELOG
+              -o ${GENDIR}/src/parser/
+              SV3_1aLexer.g4    SV3_1aParser.g4
+              SV3_1aPpLexer.g4  SV3_1aPpParser.g4
+@@ -1022,7 +991,7 @@ install(
+ # install the configuration file
+ install(
+   FILES ${CMAKE_CURRENT_BINARY_DIR}/Surelog.pc
+-  DESTINATION lib/pkgconfig)
++  DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ 
+ ADD_CUSTOM_TARGET(
+   surelog_link_target ALL

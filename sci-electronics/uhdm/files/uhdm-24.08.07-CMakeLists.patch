@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4a8cec0..7487669 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -40,13 +40,13 @@ find_package(Python3 REQUIRED COMPONENTS Interpreter)
+ message(STATUS "Python3_EXECUTABLE = ${Python3_EXECUTABLE}")
+ 
+ execute_process(
+-  COMMAND ${Python3_EXECUTABLE} -c "import orderedmultidict"
++  COMMAND ${Python3_EXECUTABLE} -c "import boltons.dictutils"
+   RESULT_VARIABLE EXIT_CODE
+   OUTPUT_QUIET)
+ if (NOT ${EXIT_CODE} EQUAL 0)
+   message(FATAL_ERROR
+-    "The \"orderedmultidict\" Python3 package is not installed. "
+-    "To install use following command: \"pip3 install orderedmultidict\".")
++    "The \"boltons.dictutils\" Python3 package is not installed. "
++    "To install use following command: \"pip3 install boltons\".")
+ endif()
+ 
+ if (WIN32)
+@@ -420,7 +420,7 @@ install(
+ # install the configuration file
+ install(
+   FILES ${CMAKE_CURRENT_BINARY_DIR}/UHDM.pc
+-  DESTINATION lib/pkgconfig)
++  DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ 
+ if(UHDM_WITH_PYTHON)
+   add_subdirectory(python)
