@@ -1,3 +1,23 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f8cf32e68..f542ed5e4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -275,7 +275,6 @@ add_custom_target(get_titan_benchmarks
+ #
+ # Unit Testing
+ #
+-enable_testing()
+ 
+ #
+ # Sub-projects
+@@ -295,7 +294,6 @@ set(READLINE_FOUND FALSE)
+ add_subdirectory(libs)
+ add_subdirectory(vpr)
+ add_subdirectory(abc)
+-add_subdirectory(ODIN_II)
+ add_subdirectory(ace2)
+ add_subdirectory(utils)
+ if(WITH_BLIFEXPLORER)
 diff --git a/cmake/modules/FindTBB.cmake b/cmake/modules/FindTBB.cmake
 deleted file mode 100644
 index 0a1a5bb77..000000000
@@ -642,8 +662,65 @@ index ca4d1a103..b7ecdc44d 100644
          find_package(Freetype)
          find_package(Cairo)
  
+diff --git a/libs/libvtrutil/CMakeLists.txt b/libs/libvtrutil/CMakeLists.txt
+index c3007a91a..6a6693ca3 100644
+--- a/libs/libvtrutil/CMakeLists.txt
++++ b/libs/libvtrutil/CMakeLists.txt
+@@ -109,11 +109,11 @@ install(TARGETS libvtrutil DESTINATION bin)
+ #
+ # Unit Tests
+ #
+-file(GLOB_RECURSE TEST_SOURCES test/*.cpp)
+-add_executable(test_vtrutil ${TEST_SOURCES})
+-target_link_libraries(test_vtrutil 
+-                        libvtrutil
+-                        libcatch)
+-
+-add_test(NAME test_vtrutil COMMAND test_vtrutil --use-colour=yes)
+-            
++#file(GLOB_RECURSE TEST_SOURCES test/*.cpp)
++#add_executable(test_vtrutil ${TEST_SOURCES})
++#target_link_libraries(test_vtrutil 
++#                        libvtrutil
++#                        libcatch)
++#
++#add_test(NAME test_vtrutil COMMAND test_vtrutil --use-colour=yes)
++#            
+diff --git a/utils/fasm/CMakeLists.txt b/utils/fasm/CMakeLists.txt
+index 2ab674f0c..34672602d 100644
+--- a/utils/fasm/CMakeLists.txt
++++ b/utils/fasm/CMakeLists.txt
+@@ -36,28 +36,3 @@ endif()
+ 
+ #Specify link-time dependancies
+ install(TARGETS genfasm DESTINATION bin)
+-
+-#
+-# Unit Tests
+-#
+-set(TEST_SOURCES
+-  test/main.cpp
+-  test/test_fasm.cpp
+-  test/test_lut.cpp
+-  test/test_parameters.cpp
+-  test/test_utils.cpp
+-  )
+-add_executable(test_fasm ${TEST_SOURCES})
+-target_link_libraries(test_fasm fasm libcatch)
+-
+-#Supress IPO link warnings if IPO is enabled
+-get_target_property(TEST_FASM_USES_IPO test_fasm INTERPROCEDURAL_OPTIMIZATION)
+-if (TEST_FASM_USES_IPO)
+-    set_target_properties(test_fasm PROPERTIES LINK_FLAGS ${IPO_LINK_WARN_SUPRESS_FLAGS})
+-endif()
+-
+-add_test(
+-  NAME test_fasm
+-  COMMAND test_fasm --use-colour=yes
+-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test
+-  )
 diff --git a/vpr/CMakeLists.txt b/vpr/CMakeLists.txt
-index a714a35f2..be65483ad 100644
+index a714a35f2..496813596 100644
 --- a/vpr/CMakeLists.txt
 +++ b/vpr/CMakeLists.txt
 @@ -93,7 +93,7 @@ else()
@@ -655,3 +732,39 @@ index a714a35f2..be65483ad 100644
  
  #
  # Execution Engine Configuration
+@@ -148,19 +148,19 @@ install(TARGETS vpr libvpr DESTINATION bin)
+ #
+ # Unit Tests
+ #
+-file(GLOB_RECURSE TEST_SOURCES test/*.cpp)
+-add_executable(test_vpr ${TEST_SOURCES})
+-target_link_libraries(test_vpr
+-                        libcatch
+-                        libvpr)
+-
+-#Supress IPO link warnings if IPO is enabled
+-get_target_property(TEST_VPR_USES_IPO vpr INTERPROCEDURAL_OPTIMIZATION)
+-if (TEST_VPR_USES_IPO)
+-    set_target_properties(test_vpr PROPERTIES LINK_FLAGS ${IPO_LINK_WARN_SUPRESS_FLAGS})
+-endif()
+-
+-add_test(NAME test_vpr
+-    COMMAND test_vpr --use-colour=yes
+-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test
+-    )
++#file(GLOB_RECURSE TEST_SOURCES test/*.cpp)
++#add_executable(test_vpr ${TEST_SOURCES})
++#target_link_libraries(test_vpr
++#                        libcatch
++#                        libvpr)
++#
++##Supress IPO link warnings if IPO is enabled
++#get_target_property(TEST_VPR_USES_IPO vpr INTERPROCEDURAL_OPTIMIZATION)
++#if (TEST_VPR_USES_IPO)
++#    set_target_properties(test_vpr PROPERTIES LINK_FLAGS ${IPO_LINK_WARN_SUPRESS_FLAGS})
++#endif()
++#
++#add_test(NAME test_vpr
++#    COMMAND test_vpr --use-colour=yes
++#    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test
++#    )

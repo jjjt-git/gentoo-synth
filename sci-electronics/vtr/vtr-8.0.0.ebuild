@@ -13,18 +13,22 @@ LICENSE=""
 SLOT="0"
 KEYWORDS="~amd64"
 
-IUSE="X"
+IUSE="X parallel"
 
 DEPEND="
 	sys-devel/flex
 	sys-devel/bison
+	sci-mathematics/abc
 	X? ( x11-libs/libX11 )
+	parallel? ( dev-cpp/tbb )
 "
 RDEPEND="${DEPEND}"
 BDEPEND=""
 
 PATCHES=(
 	"${FILESDIR}"/$P-CMakeFixes.patch
+	"${FILESDIR}"/$P-IncludeFixes.patch
+	"${FILESDIR}"/$P-TBBMigration.patch
 )
 
 S="${WORKDIR}/vtr-verilog-to-routing-$PV"

@@ -1,0 +1,32 @@
+diff --git a/vpr/src/base/vpr_api.cpp b/vpr/src/base/vpr_api.cpp
+index d08a57644..1338efffb 100644
+--- a/vpr/src/base/vpr_api.cpp
++++ b/vpr/src/base/vpr_api.cpp
+@@ -80,11 +80,8 @@ using namespace std;
+ #include "log.h"
+ 
+ #ifdef VPR_USE_TBB
+-#    include <tbb/task_scheduler_init.h>
+-
+-//We need to store the scheduler object so any concurrency
+-//setting is persistent
+-std::unique_ptr<tbb::task_scheduler_init> tbb_scheduler;
++#    include <tbb/info.h>
++#    include <tbb/global_control.h>
+ #endif
+ 
+ /* Local subroutines */
+@@ -187,11 +184,11 @@ void vpr_init(const int argc, const char** argv, t_options* options, t_vpr_setup
+     //Using Thread Building Blocks
+     if (num_workers == 0) {
+         //Use default concurrency (i.e. maximum conccurency)
+-        num_workers = tbb::task_scheduler_init::default_num_threads();
++        num_workers = oneapi::tbb::info::default_concurrency();
+     }
+ 
+     VTR_LOG("Using up to %zu parallel worker(s)\n", num_workers);
+-    tbb_scheduler = std::make_unique<tbb::task_scheduler_init>(num_workers);
++    tbb::global_control(tbb::global_control::max_allowed_parallelism, num_workers);
+ #else
+     //No parallel execution support
+     if (num_workers != 1) {
