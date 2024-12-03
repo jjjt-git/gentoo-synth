@@ -3,6 +3,8 @@
 
 EAPI=8
 
+COQ_VERSION="1.19.2"
+
 DESCRIPTION="A function definition package for Coq"
 HOMEPAGE="https://github.com/mattam82/Coq-Equations"
 SRC_URI="https://github.com/mattam82/Coq-Equations/archive/refs/tags/v1.3-$PV.tar.gz -> $P.tar.gz"
@@ -11,7 +13,7 @@ LICENSE="LGPL-2.1"
 SLOT="0"
 KEYWORDS="~amd64"
 
-DEPEND="=sci-mathematics/coq-$PV"
+DEPEND="=sci-mathematics/coq-${COQ_VERSION}"
 RDEPEND="${DEPEND}"
 BDEPEND=""
 
