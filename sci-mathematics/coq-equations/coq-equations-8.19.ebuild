@@ -3,7 +3,7 @@
 
 EAPI=8
 
-COQ_VERSION="1.19.2"
+COQ_VERSION="8.19.2"
 
 DESCRIPTION="A function definition package for Coq"
 HOMEPAGE="https://github.com/mattam82/Coq-Equations"
