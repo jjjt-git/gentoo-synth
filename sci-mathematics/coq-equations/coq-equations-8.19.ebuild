@@ -7,7 +7,7 @@ DESCRIPTION="A function definition package for Coq"
 HOMEPAGE="https://github.com/mattam82/Coq-Equations"
 SRC_URI="https://github.com/mattam82/Coq-Equations/archive/refs/tags/v1.3-$PV.tar.gz -> $P.tar.gz"
 
-LICENSE="LGPL21"
+LICENSE="LGPL-2.1"
 SLOT="0"
 KEYWORDS="~amd64"
 
