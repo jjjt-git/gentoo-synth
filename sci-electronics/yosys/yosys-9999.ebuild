@@ -18,7 +18,7 @@ KEYWORDS=
 DEPEND="dev-vcs/git
 	media-gfx/xdot
 	dev-libs/boost
-	sys-devel/clang"
+	llvm-core/clang"
 
 src_unpack() {
 	git-r3_fetch $EGIT_REPO_URI 

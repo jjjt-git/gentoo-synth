@@ -12,7 +12,7 @@ KEYWORDS=amd64
 DEPEND="dev-vcs/git
 	media-gfx/xdot
 	dev-libs/boost
-	sys-devel/clang
+	llvm-core/clang
 	sci-mathematics/abc"
 
 src_unpack() {
