@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ef436da..5e1ff8d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -43,24 +43,8 @@ if (WITH_ASAN)
+     add_compile_link_options(${sanitizer_options} -fsanitize=address)
+ endif()
+ 
+-include(FetchContent)
+-
+-# The log will show "-- Using remote fmt library", but that is misleading,
+-# as no network access will be done. (Our first declaration of `fmt` wins.)
+-option(FMT_INSTALL OFF)
+-FetchContent_Declare(
+-    fmt
+-    EXCLUDE_FROM_ALL
+-    SOURCE_DIR ${CMAKE_SOURCE_DIR}/third_party/fmt
+-)
+-
+-set(SLANG_USE_MIMALLOC OFF)
+-add_subdirectory(third_party/slang)
+-
+-# We're statically linking slang (and fmt) into our plugin, which itself is a shared library.
+-# Unless we build the dependencies as PIC, linking will fail.
+-set_target_properties(fmt PROPERTIES POSITION_INDEPENDENT_CODE ${BUILD_AS_PLUGIN})
+-set_target_properties(slang_slang PROPERTIES POSITION_INDEPENDENT_CODE ${BUILD_AS_PLUGIN})
++find_package(fmt 11.2.1 REQUIRED)
++find_package(slang 9.1 REQUIRED)
+ 
+ add_subdirectory(src)
+ 
